@@ -1,0 +1,20 @@
+# To push on OCP:
+
+• oc registry info (or) oc get route default-route -n openshift-image-registry
+• create is:
+
+kind: ImageStream
+ apiVersion: image.openshift.io/v1 
+ metadata:
+   name: mqtt-consumer
+ spec: {}
+
+
+• oc create -f is.yaml
+• oc whoami -t
+• oc new-project consumer
+• oc registry info
+• podman tag localhost/mqtt-consumer default-route-openshift-image-registry.apps-crc.testing/mqtt-consumer/localhost/mqtt-consumer:latest
+∘ podman login `oc registry info` -u kubeadmin -p `oc whoami -t` --tls-verify=false
+∘ podman push c8cc7d7bb191 default-route-openshift-image-registry.apps-crc.testing/consumer/mqtt-consumer:latest --tls-verify=false
+∘ oc new-app --docker-image=default-route-openshift-image-registry.apps-crc.testing/consumer/mqtt-consumer:latest --name=mqtt-consumer -l app=mqtt-consumer
