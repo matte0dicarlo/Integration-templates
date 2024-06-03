@@ -8,9 +8,9 @@
     <relativePath/>
   </parent>
   <groupId>org.templates</groupId>
-  <artifactId>MQTTCamelConsumer</artifactId>
+  <artifactId>MQTTCamelProducerScheduled</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>Archetype - MQTTCamelConsumer</name>
+  <name>Archetype - MQTTCamelProducerScheduled</name>
   <url>http://maven.apache.org</url>
   <properties>
     <java.version>17</java.version>
