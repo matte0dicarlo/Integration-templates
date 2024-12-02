@@ -27,7 +27,8 @@ public class SchedRouteBuilder extends RouteBuilder {
                     }
                 })
                 .handled(true);
-        
+
+/*
         from("direct:message-producer")
                 .routeId("jmsProducerRoute")
                 .transacted()
@@ -38,6 +39,19 @@ public class SchedRouteBuilder extends RouteBuilder {
                 })
                 .to("jms:queue:simplequeue")
                 .log("Message successfully sent to AMQ: ${body}");
+*/
+
+        //send duplicate message
+        from("timer:send-duplicate?repeatCount=1") // Trigger once for demonstration
+                .setBody(constant("This is a duplicate message"))
+                .setHeader("JMSMessageID", constant("unique-message-id-12345")) // Set a fixed ID
+                .to("activemq:queue:inputQueue") // Send the first message
+                .to("activemq:queue:inputQueue"); // Send the second (duplicate) message
+
+
+
+
+
     }
     @Bean
     public JmsTransactionManager jmsTransactionManager(ConnectionFactory connectionFactory) {
