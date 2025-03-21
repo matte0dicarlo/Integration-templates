@@ -1,4 +1,4 @@
-package it.producer.scheduledservice;
+package it.producer.SplitterService;
 
 import jakarta.jms.ConnectionFactory;
 import org.apache.camel.Exchange;
@@ -11,12 +11,14 @@ import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SchedRouteBuilder extends RouteBuilder {
+public class SplitterRouteBuilder extends RouteBuilder {
 
-    private static final Logger log = LoggerFactory.getLogger(SchedRouteBuilder.class);
+    private static final Logger log = LoggerFactory.getLogger(SplitterRouteBuilder.class);
 
     @Override
     public void configure() throws Exception {
+
+
 
         onException(Exception.class)
                 .process(new Processor() {
@@ -28,31 +30,38 @@ public class SchedRouteBuilder extends RouteBuilder {
                 })
                 .handled(true);
 
-/*
+
         from("direct:message-producer")
                 .routeId("jmsProducerRoute")
                 .transacted()
                 .process(exchange -> {
-                    String message = "Hello from Camel at " + System.currentTimeMillis();
-                    exchange.getIn().setBody(message);
-                    log.info("Generated message: {}", message);
+                    StringBuilder bigMessage = new StringBuilder();
+//                    for (int i = 0; i < 1000; i++) {
+                    for (int i = 0; i < 10; i++) {
+                        bigMessage.append("Hello part ").append(i).append(" ");
+                    }
+                    exchange.getIn().setBody(bigMessage.toString());
+                    log.info("Generated big message of size: {} chars", bigMessage.length());
                 })
-                .to("jms:queue:simplequeue")
-                .log("Message successfully sent to AMQ: ${body}");
-*/
-
-        //send duplicate message
-        from("timer:send-duplicate?repeatCount=1") // Trigger once for demonstration
-                .setBody(constant("This is a duplicate message"))
-                .setHeader("JMSMessageID", constant("unique-message-id-12345")) // Set a fixed ID
-                .to("activemq:queue:inputQueue") // Send the first message
-                .to("activemq:queue:inputQueue"); // Send the second (duplicate) message
-
-
+                .split(body().tokenize(" "))
+                .parallelProcessing()
+                .process(exchange -> {
+                    String partMessage = exchange.getIn().getBody(String.class);
+                    log.info("Splitting message part: {}", partMessage);
+                })
+                .multicast()
+                .parallelProcessing()
+                .to("jms:queue:simplequeue1", "jms:queue:simplequeue2")
+                .end()
+                .log("Message parts successfully sent to AMQ queues: ${body}");
 
 
 
     }
+
+
+
+
     @Bean
     public JmsTransactionManager jmsTransactionManager(ConnectionFactory connectionFactory) {
         return new JmsTransactionManager(connectionFactory);
