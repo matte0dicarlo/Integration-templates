@@ -1,4 +1,4 @@
-package it.producer.SplitterService;
+package it.producer.ProducerService;
 
 import jakarta.jms.ConnectionFactory;
 import org.apache.camel.Exchange;
@@ -11,9 +11,9 @@ import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SplitterRouteBuilder extends RouteBuilder {
+public class ProducerRouteBuilder extends RouteBuilder {
 
-    private static final Logger log = LoggerFactory.getLogger(SplitterRouteBuilder.class);
+    private static final Logger log = LoggerFactory.getLogger(ProducerRouteBuilder.class);
 
     @Override
     public void configure() throws Exception {
@@ -34,6 +34,8 @@ public class SplitterRouteBuilder extends RouteBuilder {
         from("direct:message-producer")
                 .routeId("jmsProducerRoute")
                 .transacted()
+/*
+//splits messages if needed to send to multiple queues
                 .process(exchange -> {
                     StringBuilder bigMessage = new StringBuilder();
 //                    for (int i = 0; i < 1000; i++) {
@@ -51,7 +53,8 @@ public class SplitterRouteBuilder extends RouteBuilder {
                 })
                 .multicast()
                 .parallelProcessing()
-                .to("jms:queue:simplequeue1", "jms:queue:simplequeue2")
+*/
+                .to("jms:queue:simplequeue1")
                 .end()
                 .log("Message parts successfully sent to AMQ queues: ${body}");
 

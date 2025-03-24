@@ -1,14 +1,15 @@
 package it.producer;
 
-import it.producer.SplitterService.SplitterService;
+import it.producer.ProducerService.ProducerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 public class Application {
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
@@ -16,7 +17,7 @@ public class Application {
         ApplicationContext context = SpringApplication.run(Application.class, args);
         log.info("-- MAIN --");
 
-        SplitterService splitterService = context.getBean(SplitterService.class);
-        splitterService.buildBody();
+        ProducerService producerService = context.getBean(ProducerService.class);
+        producerService.buildBody();
     }
 }

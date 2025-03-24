@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>org.templates</groupId>
-    <artifactId>JMSCamelProducerSplitter</artifactId>
+    <artifactId>JMSCamelProducerScheduled</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
