@@ -54,7 +54,7 @@ public class ProducerRouteBuilder extends RouteBuilder {
                 .multicast()
                 .parallelProcessing()
 */
-                .to("jms:queue:simplequeue1")
+                .to("jms:queue:simplequeue")
                 .end()
                 .log("Message parts successfully sent to AMQ queues: ${body}");
 
