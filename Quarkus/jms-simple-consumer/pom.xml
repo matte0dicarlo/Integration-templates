@@ -48,13 +48,7 @@
             <groupId>org.apache.camel.quarkus</groupId>
             <artifactId>camel-quarkus-activemq</artifactId>
         </dependency>
-<!--
-        <dependency>
-            <groupId>org.apache.camel.quarkus</groupId>
-            <artifactId>camel-quarkus-rabbitmq</artifactId>
-            <version>2.16.0</version>
-        </dependency>
--->
+
 
         <dependency>
             <groupId>org.apache.camel</groupId>
