@@ -1,8 +1,0 @@
-
-
-#Run
-./mvnw quarkus:dev
-
-#Packaging and run
-∘ ./mvnw package
-
